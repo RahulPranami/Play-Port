@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getSession } from "@/lib/session";
 import { logout } from "@/actions/auth";
@@ -14,7 +15,7 @@ export default async function DashboardLayout({ children }) {
         <div className="mx-auto max-w-7xl px-6 flex h-14 items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="size-7 rounded-lg bg-gradient-to-br from-violet-500 to-pink-500" />
+              <Image src="/Play Port.svg" alt="Play Port" width={28} height={28} />
               <span className="font-bold text-zinc-900">Play Port</span>
             </Link>
 
@@ -24,6 +25,12 @@ export default async function DashboardLayout({ children }) {
                 className="rounded-lg px-3 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 transition-colors"
               >
                 Dashboard
+              </Link>
+              <Link
+                href="/dashboard/bookings"
+                className="rounded-lg px-3 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 transition-colors"
+              >
+                Bookings
               </Link>
               {session?.role === "ADMIN" && (
                 <Link
