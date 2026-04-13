@@ -8,7 +8,7 @@ datasource db {
 
 enum Role {
   ADMIN
-  STAFF
+  FRONT_DESK
 }
 
 enum Duration {
@@ -22,7 +22,7 @@ model User {
   email     String   @unique
   name      String
   password  String
-  role      Role     @default(STAFF)
+  role      Role     @default(FRONT_DESK)
 
   bookings   Booking[]
   attendance StaffAttendance[]

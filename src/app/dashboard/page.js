@@ -46,7 +46,7 @@ export default async function DashboardPage() {
                   : "bg-sky-100 text-sky-700 border-sky-200"
               }
             >
-              {session?.role === "STAFF" ? "Front Desk" : session?.role}
+              {session?.role === "FRONT_DESK" ? "Front Desk" : session?.role}
             </Badge>
           </div>
           <p className="text-zinc-500 text-sm">

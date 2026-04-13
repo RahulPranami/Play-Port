@@ -57,8 +57,8 @@ export default function UserActions({ user, currentUserId }) {
           Make Admin
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => handleRoleChange("STAFF")}
-          disabled={user.role === "STAFF"}
+          onClick={() => handleRoleChange("FRONT_DESK")}
+          disabled={user.role === "FRONT_DESK"}
           className="text-sm"
         >
           Make Front Desk

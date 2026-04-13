@@ -22,13 +22,13 @@ import {
 
 export default function AddUserDialog() {
   const [open, setOpen] = useState(false);
-  const [role, setRole] = useState("STAFF");
+  const [role, setRole] = useState("FRONT_DESK");
   const [state, action, pending] = useActionState(createUser, undefined);
 
   useEffect(() => {
     if (state?.success) {
       setOpen(false);
-      setRole("STAFF");
+      setRole("FRONT_DESK");
     }
   }, [state?.success]);
 
@@ -79,7 +79,7 @@ export default function AddUserDialog() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="STAFF">Front Desk</SelectItem>
+                <SelectItem value="FRONT_DESK">Front Desk</SelectItem>
                 <SelectItem value="ADMIN">Admin</SelectItem>
               </SelectContent>
             </Select>
