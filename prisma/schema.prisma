@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -9,7 +8,7 @@ datasource db {
 
 enum Role {
   ADMIN
-  FRONT_DESK
+  STAFF
 }
 
 enum Duration {
@@ -23,7 +22,7 @@ model User {
   email     String   @unique
   name      String
   password  String
-  role      Role     @default(FRONT_DESK)
+  role      Role     @default(STAFF)
 
   bookings   Booking[]
   attendance StaffAttendance[]

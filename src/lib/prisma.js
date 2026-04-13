@@ -1,22 +1,27 @@
-import { PrismaClient } from "@/generated/prisma/client.ts";
+import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
+const adapter = new PrismaPg(pool);
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error("DATABASE_URL environment variable is not set");
-  }
-
-  const adapter = new PrismaPg({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
-    max: 5,
+  return new PrismaClient({
+    adapter,
+    log: ["error"],
   });
-  return new PrismaClient({ adapter });
 }
 
 const globalForPrisma = globalThis;
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}

@@ -85,7 +85,7 @@ export default function AttendanceReport() {
                           : "bg-sky-100 text-sky-700"
                       }
                     >
-                      {r.user.role === "FRONT_DESK" ? "Front Desk" : r.user.role}
+                      {r.user.role === "STAFF" ? "Front Desk" : r.user.role}
                     </Badge>
                   </td>
                   <td className="px-4 py-3 text-zinc-600">

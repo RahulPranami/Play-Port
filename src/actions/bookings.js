@@ -86,8 +86,8 @@ export async function editBooking(bookingId, duration) {
   const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
   if (!booking) return { error: "Booking not found." };
 
-  // FRONT_DESK can only edit within 1 hour of creation
-  if (session.role === "FRONT_DESK") {
+  // STAFF can only edit within 1 hour of creation
+  if (session.role === "STAFF") {
     const elapsed = Date.now() - new Date(booking.createdAt).getTime();
     if (elapsed > 60 * 60 * 1000) {
       return { error: "Edit window expired. Contact admin." };
