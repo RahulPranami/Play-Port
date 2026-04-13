@@ -1,7 +1,7 @@
 import LoginForm from "./login-form";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import AnimatedLogo from "@/components/animated-logo";
+import Logo from "@/components/logo";
 
 export const metadata = {
   title: "Staff Login — Play Port",
@@ -19,7 +19,7 @@ export default async function LoginPage() {
 
       <div className="w-full max-w-sm z-10">
         <div className="text-center mb-10">
-          <AnimatedLogo size={120} className="mb-6" />
+          <Logo size={120} className="mb-6" />
           <p className="text-sm font-bold text-zinc-400 tracking-[0.2em] uppercase">
             Staff Portal
           </p>

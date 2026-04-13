@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import AnimatedLogo from "@/components/animated-logo";
+import Logo from "@/components/logo";
 
 export const metadata = {
   title: "Play Port — Kids Play Zone",
@@ -15,8 +15,8 @@ export default function LandingPage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-pink-100/50 rounded-full blur-[120px] -z-10" />
       
       <main className="flex flex-col items-center gap-12 z-10">
-        {/* The Animated Logo */}
-        <AnimatedLogo size={400} />
+        {/* The Logo */}
+        <Logo size={400} />
 
         <div className="flex flex-col items-center gap-6">
           <Link href="/login">

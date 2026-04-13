@@ -6,6 +6,7 @@ import { getAttendanceReport } from "@/actions/attendance";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { formatISTTime } from "@/lib/utils";
 
 export default function AttendanceReport() {
   const [date, setDate] = useState(format(new Date(), "yyyy-MM-dd"));
@@ -89,18 +90,10 @@ export default function AttendanceReport() {
                     </Badge>
                   </td>
                   <td className="px-4 py-3 text-zinc-600">
-                    {new Date(r.checkIn).toLocaleTimeString("en-IN", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {formatISTTime(r.checkIn)}
                   </td>
                   <td className="px-4 py-3 text-zinc-600">
-                    {r.checkOut
-                      ? new Date(r.checkOut).toLocaleTimeString("en-IN", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      : "—"}
+                    {r.checkOut ? formatISTTime(r.checkOut) : "—"}
                   </td>
                   <td className="px-4 py-3">
                     <Badge

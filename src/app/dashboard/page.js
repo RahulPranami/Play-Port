@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getSession } from "@/lib/session";
 import { getDashboardStats } from "@/actions/dashboard";
 import { DURATION_LABELS } from "@/lib/constants";
+import { formatISTTime } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -54,7 +55,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <Link href="/dashboard/bookings/new">
-          <Button className="h-12 px-6 text-base font-semibold rounded-xl bg-gradient-to-r from-violet-600 to-pink-500 hover:from-violet-700 hover:to-pink-600 text-white">
+          <Button className="h-12 px-6 text-base font-semibold rounded-xl bg-gradient-to-r from-violet-600 to-pink-500 hover:from-violet-700 hover:to-pink-600 text-white shadow-lg shadow-violet-200">
             New Booking
           </Button>
         </Link>
@@ -105,11 +106,7 @@ export default async function DashboardPage() {
                       {b.customer.name}
                     </p>
                     <p className="text-xs text-zinc-500">
-                      {DURATION_LABELS[b.duration]} —{" "}
-                      {new Date(b.createdAt).toLocaleTimeString("en-IN", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {DURATION_LABELS[b.duration]} — {formatISTTime(b.createdAt)}
                     </p>
                   </div>
                 </div>
@@ -127,13 +124,13 @@ export default async function DashboardPage() {
           </h2>
           <p className="text-sm text-violet-600">
             Manage your team from the{" "}
-            <a href="/dashboard/users" className="underline font-medium">
+            <Link href="/dashboard/users" className="underline font-medium">
               Users page
-            </a>
+            </Link>
             . View detailed analytics on the{" "}
-            <a href="/dashboard/reports" className="underline font-medium">
+            <Link href="/dashboard/reports" className="underline font-medium">
               Reports page
-            </a>
+            </Link>
             .
           </p>
         </Card>

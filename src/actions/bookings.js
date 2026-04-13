@@ -11,6 +11,25 @@ async function requireAuth() {
   return session;
 }
 
+export async function searchCustomers(query) {
+  await requireAuth();
+  if (!query || query.length < 3) return [];
+
+  const customers = await prisma.customer.findMany({
+    where: {
+      phone: { contains: query },
+    },
+    select: {
+      id: true,
+      name: true,
+      phone: true,
+      totalVisits: true,
+    },
+    take: 5,
+  });
+  return customers;
+}
+
 export async function lookupCustomer(phone) {
   await requireAuth();
   if (!phone || phone.length < 10) return null;

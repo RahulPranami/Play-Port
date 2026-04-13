@@ -5,6 +5,7 @@ import { checkIn, checkOut } from "@/actions/attendance";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { formatISTTime } from "@/lib/utils";
 
 export default function CheckInOut({ status }) {
   const [pending, startTransition] = useTransition();
@@ -53,16 +54,7 @@ export default function CheckInOut({ status }) {
           </div>
           <p className="font-semibold text-zinc-900">Shift Complete</p>
           <p className="text-sm text-zinc-500 mt-1">
-            In:{" "}
-            {new Date(status.checkIn).toLocaleTimeString("en-IN", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}{" "}
-            — Out:{" "}
-            {new Date(status.checkOut).toLocaleTimeString("en-IN", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            In: {formatISTTime(status.checkIn)} — Out: {formatISTTime(status.checkOut)}
           </p>
         </div>
       ) : (
@@ -77,7 +69,7 @@ export default function CheckInOut({ status }) {
             }`}
           >
             {hasCheckedIn
-              ? `Checked In at ${new Date(status.checkIn).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}`
+              ? `Checked In at ${formatISTTime(status.checkIn)}`
               : pending
                 ? "Checking in..."
                 : "Check In"}
