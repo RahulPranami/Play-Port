@@ -80,6 +80,33 @@ export async function createBooking(customerId, duration) {
   return booking;
 }
 
+export async function editBooking(bookingId, duration) {
+  const session = await requireAuth();
+
+  const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
+  if (!booking) return { error: "Booking not found." };
+
+  // FRONT_DESK can only edit within 1 hour of creation
+  if (session.role === "FRONT_DESK") {
+    const elapsed = Date.now() - new Date(booking.createdAt).getTime();
+    if (elapsed > 60 * 60 * 1000) {
+      return { error: "Edit window expired. Contact admin." };
+    }
+  }
+
+  const amount = PRICING[duration];
+  if (!amount) return { error: "Invalid duration." };
+
+  await prisma.booking.update({
+    where: { id: bookingId },
+    data: { duration, amount, isEdited: true },
+  });
+
+  revalidatePath("/dashboard/bookings");
+  revalidatePath("/dashboard");
+  return { success: true };
+}
+
 export async function getTodaysBookings() {
   await requireAuth();
 

@@ -38,6 +38,12 @@ export default async function DashboardLayout({ children }) {
               >
                 Subscriptions
               </Link>
+              <Link
+                href="/dashboard/attendance"
+                className="rounded-lg px-3 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 transition-colors"
+              >
+                Attendance
+              </Link>
               {session?.role === "ADMIN" && (
                 <>
                   <Link
