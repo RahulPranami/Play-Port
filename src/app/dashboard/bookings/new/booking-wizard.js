@@ -7,6 +7,7 @@ import {
   createCustomer,
   createBooking,
 } from "@/actions/bookings";
+import { createSubscription } from "@/actions/subscriptions";
 import { PRICING, DURATION_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,12 @@ import {
 import { toast } from "sonner";
 
 const STEPS = { PHONE: 0, CUSTOMER: 1, DURATION: 2, SUCCESS: 3 };
+const formatDate = (d) =>
+  new Date(d).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 
 export default function BookingWizard() {
   const router = useRouter();
@@ -34,6 +41,7 @@ export default function BookingWizard() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState(null);
   const [booking, setBooking] = useState(null);
+  const [subscription, setSubscription] = useState(null);
 
   const handlePhoneLookup = useCallback(() => {
     const cleaned = phone.replace(/\D/g, "");
@@ -92,6 +100,12 @@ export default function BookingWizard() {
       try {
         const result = await createBooking(customer.id, selectedDuration);
         setBooking(result);
+
+        if (selectedDuration === "MONTHLY") {
+          const sub = await createSubscription(customer.id);
+          setSubscription(sub);
+        }
+
         setConfirmOpen(false);
         setStep(STEPS.SUCCESS);
         toast.success("Booking confirmed!");
@@ -109,6 +123,7 @@ export default function BookingWizard() {
     setIsNewCustomer(false);
     setSelectedDuration(null);
     setBooking(null);
+    setSubscription(null);
   }, []);
 
   return (
@@ -279,6 +294,19 @@ export default function BookingWizard() {
               ₹{booking.amount}
             </p>
           </div>
+          {subscription && (
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-left">
+              <p className="text-sm font-semibold text-green-800">
+                Monthly Subscription Created
+              </p>
+              <p className="text-lg font-bold text-green-700 mt-1">
+                Code: {subscription.uniqueCode}
+              </p>
+              <p className="text-xs text-green-600 mt-0.5">
+                Valid until {formatDate(subscription.endDate)}
+              </p>
+            </div>
+          )}
           <div className="flex gap-3 pt-2">
             <Button
               variant="outline"
