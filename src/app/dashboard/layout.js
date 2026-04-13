@@ -14,9 +14,8 @@ export default async function DashboardLayout({ children }) {
       <header className="sticky top-0 z-50 border-b bg-white shadow-sm">
         <div className="mx-auto max-w-7xl px-6 flex h-14 items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <Image src="/Play Port.svg" alt="Play Port" width={28} height={28} />
-              <span className="font-bold text-zinc-900">Play Port</span>
+            <Link href="/dashboard" className="flex items-center hover:scale-110 transition-transform">
+              <Image src="/Play Port.svg" alt="Play Port Logo" width={32} height={32} />
             </Link>
 
             <nav className="hidden md:flex items-center gap-1">
