@@ -18,7 +18,7 @@ export async function login(prevState, formData) {
     user = await prisma.user.findUnique({ where: { username } });
   } catch (err) {
     console.error("Database error during login:", err);
-    return { error: "Unable to connect to the database. Please try again." };
+    return { error: `Database error: ${err.message}` };
   }
 
   if (!user) {
