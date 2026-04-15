@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -19,8 +20,7 @@ enum Duration {
 
 model User {
   id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
+  username  String   @unique
   password  String
   role      Role     @default(FRONT_DESK)
 

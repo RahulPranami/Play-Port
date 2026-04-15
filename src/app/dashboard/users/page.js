@@ -17,7 +17,7 @@ export default async function UsersPage() {
 
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
-    select: { id: true, name: true, email: true, role: true, createdAt: true },
+    select: { id: true, username: true, role: true, createdAt: true },
   });
 
   return (
@@ -38,10 +38,7 @@ export default async function UsersPage() {
             <thead className="border-b bg-zinc-50">
               <tr>
                 <th className="px-5 py-3.5 text-left font-semibold text-zinc-600">
-                  Name
-                </th>
-                <th className="px-5 py-3.5 text-left font-semibold text-zinc-600">
-                  Email
+                  Username
                 </th>
                 <th className="px-5 py-3.5 text-left font-semibold text-zinc-600">
                   Role
@@ -60,17 +57,16 @@ export default async function UsersPage() {
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="size-8 rounded-full bg-gradient-to-br from-violet-400 to-pink-400 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0">
-                        {user.name.charAt(0).toUpperCase()}
+                        {user.username.charAt(0).toUpperCase()}
                       </div>
                       <span className="font-medium text-zinc-900">
-                        {user.name}
+                        {user.username}
                       </span>
                       {user.id === session?.id && (
                         <span className="text-xs text-zinc-400">(you)</span>
                       )}
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-zinc-600">{user.email}</td>
                   <td className="px-5 py-4">
                     <Badge
                       variant="secondary"

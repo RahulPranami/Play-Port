@@ -75,7 +75,7 @@ export default function AttendanceReport() {
               {records.map((r) => (
                 <tr key={r.id}>
                   <td className="px-4 py-3 font-medium text-zinc-900">
-                    {r.user.name}
+                    {r.user.username}
                   </td>
                   <td className="px-4 py-3">
                     <Badge

@@ -57,7 +57,7 @@ export default async function BookingsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider bg-zinc-100 px-2 py-1 rounded-md">
-                        {b.creator.name.split(" ")[0]}
+                        {b.creator.username}
                       </span>
                     </td>
                   </tr>

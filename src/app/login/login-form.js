@@ -12,13 +12,13 @@ export default function LoginForm() {
   return (
     <form action={action} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="username">Username</Label>
         <Input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="you@playport.com"
-          autoComplete="email"
+          id="username"
+          name="username"
+          type="text"
+          placeholder="admin"
+          autoComplete="username"
           required
         />
       </div>

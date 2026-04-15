@@ -28,7 +28,7 @@ export async function getDashboardStats() {
         where: { createdAt: { gte: todayStart, lte: todayEnd } },
         include: {
           customer: { select: { name: true, phone: true } },
-          creator: { select: { name: true } },
+          creator: { select: { username: true } },
         },
         orderBy: { createdAt: "desc" },
         take: 5,

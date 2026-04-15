@@ -45,19 +45,8 @@ export default function AddUserDialog() {
         </DialogHeader>
         <form action={action} className="space-y-4 mt-2">
           <div className="space-y-1.5">
-            <Label htmlFor="name">Full Name</Label>
-            <Input id="name" name="name" placeholder="Jane Smith" required />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="jane@playport.com"
-              required
-            />
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" name="username" placeholder="admin" required />
           </div>
 
           <div className="space-y-1.5">

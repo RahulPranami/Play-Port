@@ -9,8 +9,7 @@ const secret = new TextEncoder().encode(
 export async function createSession(user) {
   const token = await new SignJWT({
     id: user.id,
-    email: user.email,
-    name: user.name,
+    username: user.username,
     role: user.role,
   })
     .setProtectedHeader({ alg: "HS256" })

@@ -65,7 +65,7 @@ export default async function DashboardLayout({ children }) {
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex flex-col items-end">
               <span className="text-sm font-medium text-zinc-900">
-                {session?.name}
+                {session?.username}
               </span>
               <Badge
                 variant="secondary"

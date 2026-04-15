@@ -16,12 +16,11 @@ async function requireAdmin() {
 export async function createUser(prevState, formData) {
   await requireAdmin();
 
-  const name = formData.get("name")?.toString().trim();
-  const email = formData.get("email")?.toString().trim().toLowerCase();
+  const username = formData.get("username")?.toString().trim().toLowerCase();
   const password = formData.get("password")?.toString();
   const role = formData.get("role")?.toString();
 
-  if (!name || !email || !password || !role) {
+  if (!username || !password || !role) {
     return { error: "All fields are required." };
   }
 
@@ -29,15 +28,15 @@ export async function createUser(prevState, formData) {
     return { error: "Password must be at least 8 characters." };
   }
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const existing = await prisma.user.findUnique({ where: { username } });
   if (existing) {
-    return { error: "A user with this email already exists." };
+    return { error: "A user with this username already exists." };
   }
 
   const hashed = await hash(password, 12);
 
   await prisma.user.create({
-    data: { name, email, password: hashed, role },
+    data: { username, password: hashed, role },
   });
 
   revalidatePath("/dashboard/users");
@@ -70,6 +69,6 @@ export async function getUsers() {
   await requireAdmin();
   return prisma.user.findMany({
     orderBy: { createdAt: "desc" },
-    select: { id: true, name: true, email: true, role: true, createdAt: true },
+    select: { id: true, username: true, role: true, createdAt: true },
   });
 }

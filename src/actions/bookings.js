@@ -138,7 +138,7 @@ export async function getTodaysBookings() {
     where: { createdAt: { gte: start, lte: end } },
     include: {
       customer: { select: { name: true, phone: true } },
-      creator: { select: { name: true } },
+      creator: { select: { username: true } },
     },
     orderBy: { createdAt: "desc" },
   });

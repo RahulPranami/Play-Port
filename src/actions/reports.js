@@ -15,7 +15,7 @@ export async function getReports(startDate, endDate) {
     where: { createdAt: { gte: start, lte: end } },
     include: {
       customer: { select: { id: true, name: true, phone: true } },
-      creator: { select: { name: true } },
+      creator: { select: { username: true } },
     },
     orderBy: { createdAt: "desc" },
   });

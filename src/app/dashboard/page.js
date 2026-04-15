@@ -38,7 +38,7 @@ export default async function DashboardPage() {
         <div>
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-2xl font-bold text-zinc-900">
-              Welcome back, {session?.name?.split(" ")[0]}
+              Welcome back, {session?.username}
             </h1>
             <Badge
               className={

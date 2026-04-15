@@ -75,7 +75,7 @@ export async function getAttendanceReport(dateStr) {
 
   return prisma.staffAttendance.findMany({
     where: { date },
-    include: { user: { select: { name: true, email: true, role: true } } },
+    include: { user: { select: { username: true, role: true } } },
     orderBy: { checkIn: "asc" },
   });
 }

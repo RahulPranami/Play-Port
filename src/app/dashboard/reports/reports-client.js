@@ -262,13 +262,14 @@ export default function ReportsClient() {
                 <th className="px-6 py-4">Date & Time</th>
                 <th className="px-6 py-4">Customer</th>
                 <th className="px-6 py-4">Duration</th>
+                <th className="px-6 py-4">Staff</th>
                 <th className="px-6 py-4 text-right">Amount</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100">
               {data.bookings.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-zinc-400">
+                  <td colSpan={5} className="px-6 py-12 text-center text-zinc-400">
                     No bookings found for this range
                   </td>
                 </tr>
@@ -289,6 +290,11 @@ export default function ReportsClient() {
                       <Badge variant="outline" className="font-medium">
                         {DURATION_LABELS[b.duration]}
                       </Badge>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider bg-zinc-100 px-2 py-1 rounded-md">
+                        {b.creator.username}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-right font-black text-zinc-900">
                       ₹{b.amount}

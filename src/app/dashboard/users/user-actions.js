@@ -21,7 +21,7 @@ export default function UserActions({ user, currentUserId }) {
   }
 
   function handleDelete() {
-    if (!confirm(`Remove ${user.name} from the system?`)) return;
+    if (!confirm(`Remove ${user.username} from the system?`)) return;
     startTransition(() => deleteUser(user.id));
   }
 
