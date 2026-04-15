@@ -25,8 +25,13 @@ export async function searchCustomers(query) {
       parentName: true,
       phone: true,
       totalVisits: true,
+      subscriptions: {
+        where: { isActive: true, endDate: { gte: new Date() } },
+        select: { id: true, uniqueCode: true, endDate: true },
+        take: 1,
+      },
     },
-    take: 5,
+    take: 10,
   });
   return customers;
 }
@@ -35,7 +40,7 @@ export async function lookupCustomer(phone) {
   await requireAuth();
   if (!phone || phone.length < 10) return null;
 
-  const customer = await prisma.customer.findUnique({
+  const customers = await prisma.customer.findMany({
     where: { phone },
     select: {
       id: true,
@@ -50,7 +55,7 @@ export async function lookupCustomer(phone) {
       },
     },
   });
-  return customer;
+  return customers;
 }
 
 export async function createCustomer(prevState, formData) {
@@ -61,10 +66,13 @@ export async function createCustomer(prevState, formData) {
   const parentName = formData.get("parentName")?.toString().trim();
 
   if (!phone || !name) return { error: "Phone and name are required." };
-  if (phone.length < 10) return { error: "Enter a valid phone number." };
+  if (phone.length < 10) return { error: "Enter a valid 10-digit phone number." };
 
-  const existing = await prisma.customer.findUnique({ where: { phone } });
-  if (existing) return { error: "Customer already exists.", customer: existing };
+  // Check if this exact child already exists under this phone
+  const existing = await prisma.customer.findFirst({
+    where: { phone, name: { equals: name, mode: 'insensitive' } }
+  });
+  if (existing) return { error: "This child is already registered with this phone.", customer: existing };
 
   const customer = await prisma.customer.create({
     data: { phone, name, parentName },
@@ -74,10 +82,10 @@ export async function createCustomer(prevState, formData) {
   return { success: true, customer };
 }
 
-export async function createBooking(customerId, duration) {
+export async function createBooking(customerId, duration, amountOverride) {
   const session = await requireAuth();
 
-  const amount = PRICING[duration];
+  let amount = amountOverride !== undefined ? amountOverride : PRICING[duration];
   if (amount === undefined) throw new Error("Invalid duration");
 
   const booking = await prisma.booking.create({

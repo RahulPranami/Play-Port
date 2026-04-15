@@ -21,7 +21,7 @@ export async function createSubscription(customerId) {
 
   const subscription = await prisma.subscription.create({
     data: { customerId, uniqueCode, startDate, endDate },
-    include: { customer: { select: { name: true, phone: true } } },
+    include: { customer: { select: { name: true, phone: true, parentName: true } } },
   });
 
   revalidatePath("/dashboard/subscriptions");
@@ -63,7 +63,7 @@ export async function validateSubscription(code) {
 
   const sub = await prisma.subscription.findUnique({
     where: { uniqueCode: code.toUpperCase().trim() },
-    include: { customer: { select: { name: true, phone: true } } },
+    include: { customer: { select: { name: true, phone: true, parentName: true } } },
   });
 
   if (!sub) return { valid: false, error: "Subscription not found." };
@@ -79,7 +79,7 @@ export async function getSubscriptions() {
   await requireAuth();
 
   return prisma.subscription.findMany({
-    include: { customer: { select: { name: true, phone: true } } },
+    include: { customer: { select: { name: true, phone: true, parentName: true } } },
     orderBy: { createdAt: "desc" },
     take: 50,
   });

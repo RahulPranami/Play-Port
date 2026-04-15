@@ -32,7 +32,7 @@ model User {
 
 model Customer {
   id          String   @id @default(cuid())
-  phone       String   @unique
+  phone       String
   name        String
   parentName  String?
   totalVisits Int      @default(0)
@@ -41,6 +41,8 @@ model Customer {
   subscriptions Subscription[]
 
   createdAt DateTime @default(now())
+
+  @@index([phone])
 }
 
 model Booking {
