@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Search, UserPlus, Phone, CheckCircle2, Receipt } from "lucide-react";
+import { Search, UserPlus, Phone, CheckCircle2, Receipt, User } from "lucide-react";
 
 export default function BookingForm() {
   const router = useRouter();
@@ -26,6 +26,7 @@ export default function BookingForm() {
   // Form State
   const [phone, setPhone] = useState("");
   const [customerName, setCustomerName] = useState("");
+  const [parentName, setParentName] = useState("");
   const [selectedDuration, setSelectedDuration] = useState("ONE_HOUR");
   
   // UI State
@@ -51,15 +52,19 @@ export default function BookingForm() {
     } else {
       setSearchResults([]);
       setShowResults(false);
-      setCustomer(null);
-      setCustomerName("");
+      if (!customer) {
+        setCustomer(null);
+        setCustomerName("");
+        setParentName("");
+      }
     }
-  }, [phone]);
+  }, [phone, customer]);
 
   const selectCustomer = (cust) => {
     setCustomer(cust);
     setPhone(cust.phone);
     setCustomerName(cust.name);
+    setParentName(cust.parentName || "");
     setShowResults(false);
   };
 
@@ -86,6 +91,7 @@ export default function BookingForm() {
           const fd = new FormData();
           fd.set("phone", cleanedPhone);
           fd.set("name", customerName.trim());
+          fd.set("parentName", parentName.trim());
           const res = await createCustomer(undefined, fd);
           if (res.error) {
             toast.error(res.error);
@@ -115,6 +121,7 @@ export default function BookingForm() {
   const resetForm = () => {
     setPhone("");
     setCustomerName("");
+    setParentName("");
     setCustomer(null);
     setSelectedDuration("ONE_HOUR");
     setBookingResult(null);
@@ -196,6 +203,8 @@ export default function BookingForm() {
                 placeholder="10 digit number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                onFocus={() => { if (searchResults.length > 0) setShowResults(true); }}
+                onBlur={() => { setTimeout(() => setShowResults(false), 200); }}
                 className="h-14 pl-11 rounded-2xl text-lg font-medium border-zinc-200 focus:border-violet-500 focus:ring-violet-500/20"
                 required
               />
@@ -209,7 +218,7 @@ export default function BookingForm() {
 
             {/* Existing Customer Suggestions */}
             {showResults && searchResults.length > 0 && (
-              <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-white rounded-2xl border shadow-2xl overflow-hidden">
+              <div className="absolute top-full left-0 right-0 z-50 mt-2 bg-white rounded-2xl border shadow-2xl overflow-hidden max-h-60 overflow-y-auto">
                 <div className="bg-zinc-50 px-4 py-2 border-b">
                   <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Select Existing Child</span>
                 </div>
@@ -217,7 +226,7 @@ export default function BookingForm() {
                   <button
                     key={cust.id}
                     type="button"
-                    onClick={() => selectCustomer(cust)}
+                    onMouseDown={(e) => { e.preventDefault(); selectCustomer(cust); }}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-violet-50 transition-colors text-left group border-b last:border-0"
                   >
                     <div>
@@ -231,32 +240,54 @@ export default function BookingForm() {
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-zinc-400 ml-1">
-              Child's Name
-            </Label>
-            <div className="relative">
-              <Input
-                id="name"
-                placeholder="Enter full name"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                className={`h-14 pl-11 rounded-2xl text-lg font-medium border-zinc-200 focus:border-violet-500 focus:ring-violet-500/20 ${customer ? 'bg-zinc-50' : ''}`}
-                readOnly={!!customer}
-                required
-              />
-              <UserPlus className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-zinc-400" />
-              {customer && (
-                <button 
-                  type="button"
-                  onClick={() => { setCustomer(null); setCustomerName(""); }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-violet-600 hover:text-violet-700"
-                >
-                  Change
-                </button>
-              )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-zinc-400 ml-1">
+                Child's Name
+              </Label>
+              <div className="relative">
+                <Input
+                  id="name"
+                  placeholder="Full name"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  className={`h-14 pl-11 rounded-2xl text-lg font-medium border-zinc-200 focus:border-violet-500 focus:ring-violet-500/20 ${customer ? 'bg-zinc-50' : ''}`}
+                  readOnly={!!customer}
+                  required
+                />
+                <UserPlus className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-zinc-400" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="parentName" className="text-xs font-bold uppercase tracking-widest text-zinc-400 ml-1">
+                Parent's Name
+              </Label>
+              <div className="relative">
+                <Input
+                  id="parentName"
+                  placeholder="Full name"
+                  value={parentName}
+                  onChange={(e) => setParentName(e.target.value)}
+                  className={`h-14 pl-11 rounded-2xl text-lg font-medium border-zinc-200 focus:border-violet-500 focus:ring-violet-500/20 ${customer ? 'bg-zinc-50' : ''}`}
+                  readOnly={!!customer}
+                />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-zinc-400" />
+              </div>
             </div>
           </div>
+          
+          {customer && (
+            <div className="flex justify-end">
+              <button 
+                type="button"
+                onClick={() => { setCustomer(null); setCustomerName(""); setParentName(""); }}
+                className="text-xs font-bold text-violet-600 hover:text-violet-700 underline underline-offset-4"
+              >
+                Clear Selected & Register New
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Duration Selection Section */}

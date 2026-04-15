@@ -1,12 +1,16 @@
 import { getSubscriptions } from "@/actions/subscriptions";
+import { getSession } from "@/lib/session";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ValidateSubscription from "./validate-subscription";
+import EditSubscriptionDialog from "./edit-subscription";
 
 export const metadata = { title: "Subscriptions — Play Port" };
 
 export default async function SubscriptionsPage() {
+  const session = await getSession();
   const subscriptions = await getSubscriptions();
+  const isAdmin = session?.role === "ADMIN";
 
   return (
     <div className="space-y-6">
@@ -41,6 +45,11 @@ export default async function SubscriptionsPage() {
                 <th className="px-5 py-3.5 text-left font-semibold text-zinc-600">
                   Expires
                 </th>
+                {isAdmin && (
+                  <th className="px-5 py-3.5 text-right font-semibold text-zinc-600">
+                    Actions
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -79,6 +88,11 @@ export default async function SubscriptionsPage() {
                         year: "numeric",
                       })}
                     </td>
+                    {isAdmin && (
+                      <td className="px-5 py-4 text-right">
+                        <EditSubscriptionDialog subscription={sub} />
+                      </td>
+                    )}
                   </tr>
                 );
               })}

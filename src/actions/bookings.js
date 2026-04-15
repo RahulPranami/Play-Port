@@ -22,6 +22,7 @@ export async function searchCustomers(query) {
     select: {
       id: true,
       name: true,
+      parentName: true,
       phone: true,
       totalVisits: true,
     },
@@ -39,6 +40,7 @@ export async function lookupCustomer(phone) {
     select: {
       id: true,
       name: true,
+      parentName: true,
       phone: true,
       totalVisits: true,
       subscriptions: {
@@ -56,6 +58,7 @@ export async function createCustomer(prevState, formData) {
 
   const phone = formData.get("phone")?.toString().trim();
   const name = formData.get("name")?.toString().trim();
+  const parentName = formData.get("parentName")?.toString().trim();
 
   if (!phone || !name) return { error: "Phone and name are required." };
   if (phone.length < 10) return { error: "Enter a valid phone number." };
@@ -64,8 +67,8 @@ export async function createCustomer(prevState, formData) {
   if (existing) return { error: "Customer already exists.", customer: existing };
 
   const customer = await prisma.customer.create({
-    data: { phone, name },
-    select: { id: true, name: true, phone: true, totalVisits: true },
+    data: { phone, name, parentName },
+    select: { id: true, name: true, parentName: true, phone: true, totalVisits: true },
   });
 
   return { success: true, customer };
@@ -75,7 +78,7 @@ export async function createBooking(customerId, duration) {
   const session = await requireAuth();
 
   const amount = PRICING[duration];
-  if (!amount) throw new Error("Invalid duration");
+  if (amount === undefined) throw new Error("Invalid duration");
 
   const booking = await prisma.booking.create({
     data: {
@@ -105,16 +108,22 @@ export async function editBooking(bookingId, duration) {
   const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
   if (!booking) return { error: "Booking not found." };
 
-  // FRONT_DESK can only edit within 1 hour of creation
+  // FRONT_DESK can only edit if the booking duration hasn't expired
   if (session.role === "FRONT_DESK") {
-    const elapsed = Date.now() - new Date(booking.createdAt).getTime();
-    if (elapsed > 60 * 60 * 1000) {
-      return { error: "Edit window expired. Contact admin." };
+    const createdAt = new Date(booking.createdAt).getTime();
+    let durationMs = 0;
+    if (booking.duration === "HALF_HOUR") durationMs = 30 * 60 * 1000;
+    else if (booking.duration === "ONE_HOUR") durationMs = 60 * 60 * 1000;
+    else if (booking.duration === "MONTHLY") durationMs = 30 * 24 * 60 * 60 * 1000;
+
+    const expiryTime = createdAt + durationMs;
+    if (Date.now() > expiryTime) {
+      return { error: "Booking duration has expired. Contact admin to edit." };
     }
   }
 
   const amount = PRICING[duration];
-  if (!amount) return { error: "Invalid duration." };
+  if (amount === undefined) return { error: "Invalid duration." };
 
   await prisma.booking.update({
     where: { id: bookingId },

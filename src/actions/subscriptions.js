@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { generateUniqueCode } from "@/lib/unique-code";
-import { addDays } from "date-fns";
+import { addDays, isValid } from "date-fns";
 
 async function requireAuth() {
   const session = await getSession();
@@ -26,6 +26,35 @@ export async function createSubscription(customerId) {
 
   revalidatePath("/dashboard/subscriptions");
   return subscription;
+}
+
+export async function updateSubscription(id, data) {
+  const session = await getSession();
+  if (!session || session.role !== "ADMIN") {
+    return { error: "Only admins can edit subscriptions." };
+  }
+
+  const { endDate, isActive } = data;
+  const updateData = {};
+
+  if (endDate && isValid(new Date(endDate))) {
+    updateData.endDate = new Date(endDate);
+  }
+
+  if (typeof isActive === "boolean") {
+    updateData.isActive = isActive;
+  }
+
+  try {
+    await prisma.subscription.update({
+      where: { id },
+      data: updateData,
+    });
+    revalidatePath("/dashboard/subscriptions");
+    return { success: true };
+  } catch (err) {
+    return { error: "Failed to update subscription." };
+  }
 }
 
 export async function validateSubscription(code) {

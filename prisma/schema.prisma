@@ -25,7 +25,6 @@ model User {
   role      Role     @default(FRONT_DESK)
 
   bookings   Booking[]
-  attendance StaffAttendance[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -35,6 +34,7 @@ model Customer {
   id          String   @id @default(cuid())
   phone       String   @unique
   name        String
+  parentName  String?
   totalVisits Int      @default(0)
 
   bookings      Booking[]
@@ -68,15 +68,4 @@ model Subscription {
   isActive   Boolean  @default(true)
 
   createdAt DateTime @default(now())
-}
-
-model StaffAttendance {
-  id       String    @id @default(cuid())
-  userId   String
-  user     User      @relation(fields: [userId], references: [id])
-  date     DateTime  @db.Date
-  checkIn  DateTime
-  checkOut DateTime?
-
-  @@unique([userId, date])
 }
